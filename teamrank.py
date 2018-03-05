@@ -11,6 +11,53 @@ teamssetlosses = {}
 teamsmatchwins = {}
 teamsmatchlosses = {}
 
+def predict_result(b, data):
+  team1 = data[0]
+  team2 = data[1]
+
+  if (team1 == "BYE" or team2 == "BYE"):
+    return
+
+  team1value = b[teamsdict[team1]]
+  team2value = b[teamsdict[team2]]
+
+  team1 = "{:30}".format(team1)
+  team2 = "{:30}".format(team2)
+
+  predicted = "="
+  if (team1value < team2value):
+    predicted = "<"
+  elif (team1value > team2value):
+    predicted = ">"
+
+  print("Predicted:", team1, predicted, team2)
+  if (len(data) == 4):
+    team1score = int(data[2])
+    team2score = int(data[3])
+
+    actual = "="
+    if (team1score < team2score):
+      actual = "<"
+    elif (team1score > team2score):
+      actual = ">"
+    print("Actual:   ", team1, actual, team2)
+    if (predicted == actual):
+      print("Correct Prediction")
+    else:
+      print("Incorrect Prediction")
+
+
+def predict_results(b, roundnumber):
+  matchstring = str(roundnumber).zfill(2)
+  matchfilename = "Rounds/Round" + matchstring
+  with open (matchfilename, "r") as matchesfile:
+    matches = matchesfile.readlines()
+    roundnumber = 0
+    for match in matches:
+      match = match.rstrip()
+      data = match.split(":")
+      predict_result(b, data)
+
 def print_results(b):
   teamnumber = 0
   for i in b:
@@ -31,8 +78,8 @@ def print_results(b):
     teamname = "{:30}".format(teamname)
     valuestring = str(value)
     valuestring = "{:30}".format(valuestring)
-    setwins = "{:3}".format(setwins)
-    setlosses = "{:3}".format(setlosses)
+    setwins = "{:2}".format(setwins)
+    setlosses = "{:2}".format(setlosses)
     matchwins = "{:3}".format(matchwins)
     matchlosses = "{:3}".format(matchlosses)
 
@@ -113,12 +160,12 @@ def add_match_data(teamsmatrix, data):
   
 
 # Opens the match file that is specified, and adds the data to the teamsmatrix
-def initialize_match(teamsmatrix, matchnumber):
-  matchstring = str(matchnumber).zfill(2)
+def initialize_match(teamsmatrix, roundnumber):
+  matchstring = str(roundnumber).zfill(2)
   matchfilename = "Rounds/Round" + matchstring
   with open (matchfilename, "r") as matchesfile:
     matches = matchesfile.readlines()
-    matchnumber = 0
+    roundnumber = 0
     for match in matches:
       match = match.rstrip()
       data = match.split(":")
@@ -143,9 +190,14 @@ def initialize_teams_dict():
  
  # Calls the Functions
 def main():
+  mode = 0
+  if (sys.argv[1] == "ranking"):
+    mode = 0
+  elif (sys.argv[1] == "prediction"):
+    mode = 1
   # Converts arguments to ints (breaks if invalid)
-  startindex = int(sys.argv[1])
-  endindex = int(sys.argv[2])
+  startindex = int(sys.argv[2])
+  endindex = int(sys.argv[3])
   # Insures Start Index is less than End Index
   if (startindex > endindex):
     print("StartIndex cannot be greater than EndIndex")
@@ -161,7 +213,11 @@ def main():
   # Calculates Eigenvectors
   teamsmatrix = normalize_matrix(teamsmatrix)
   b = power_iteration(teamsmatrix, 10000)
-  print_results(b)
+
+  if (mode == 0):
+    print_results(b)
+  elif (mode == 1):
+    predict_results(b, endindex + 1)
   #power_iteration2(teamsmatrix)
 
 main()
