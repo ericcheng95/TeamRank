@@ -1,0 +1,30 @@
+How to Set Up:
+Create (or Modify if already existing) a file in the Teams folder called Teams
+It should be at the file path Teams/Teams
+Name every team that is playing in this tournament, one per line
+
+For each Round you play, create a new file and put it in the Rounds folder
+Rounds should follow syntax Round00, Round01, ... etc. (start at 00)
+Format for each match should be as follows:
+[Team 1 Name]:[Team 2 Name]:[Team 1 Score]:[Team 2 Score]
+Make sure you do not misspell anything
+
+To run ranking algorithm:
+python teamrank.py ranking [firstRound] [lastRound]
+
+e.g. This will rank the first 4 rounds
+python teamrank.py ranking 0 3
+
+To run prediction algorithm:
+Create the Round file for the upcoming match and fill it up with the team names
+(don't include score)
+e.g.
+[Team 1 Name]:[Team 2 Name]:
+
+python teamrank.py prediction [firstRound] [previouslyPlayedRound]
+
+e.g. This will create prediction for the 4th round (Round03)
+python teamrank.py prediction 0 2
+
+If the predicted round already has a score, the output will printed alongside
+the prediction.
