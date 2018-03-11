@@ -145,7 +145,7 @@ def add_match_data(teamsmatrix, data):
   team2score = int(data[3])
   numgames = team1score + team2score
 
-  teamsmatrix[team1number, team2number] = team1score  * 1.0/ numgames
+  teamsmatrix[team1number, team2number] = team1score * 1.0 / numgames
   teamsmatrix[team2number, team1number] = team2score * 1.0 / numgames
   
   add_match_score(teamsmatchwins, team1, team1score)
@@ -217,7 +217,11 @@ def main():
   if (mode == 0):
     print_results(b)
   elif (mode == 1):
-    predict_results(b, endindex + 1)
+    if (len(sys.argv) == 4):
+      predict_results(b, endindex + 1)
+    elif (len(sys.argv) == 5):
+      predictedround = sys.argv[4]
+      predict_results(b, predictedround)
   #power_iteration2(teamsmatrix)
 
 main()

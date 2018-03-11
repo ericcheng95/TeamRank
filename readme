@@ -10,10 +10,14 @@ Format for each match should be as follows:
 Make sure you do not misspell anything
 
 To run ranking algorithm:
-python teamrank.py ranking [firstRound] [lastRound]
+python teamrank.py ranking [firstRound] [lastRound] [Optional: roundToPredict]
 
 e.g. This will rank the first 4 rounds
 python teamrank.py ranking 0 3
+
+e.g. This will do the same as above ^
+python teamrank.py ranking 0 3 4
+You can change the roundToPredict to an older round to see how accurate the predictions are
 
 To run prediction algorithm:
 Create the Round file for the upcoming match and fill it up with the team names
